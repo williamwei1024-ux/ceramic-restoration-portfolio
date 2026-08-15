@@ -366,7 +366,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
   // 「另一个我」：新标签页打开摄影作品集
   document.getElementById('otherBtn').addEventListener('click', () => {
-    window.open('https://wlyportf.netlify.app/', '_blank', 'noopener');
+    window.open('https://wlyphoto.netlify.app/', '_blank', 'noopener');
   });
   // 「首尾」按钮：封面/封底间切换（封面→封底，封底→封面，其他→封面）
   document.getElementById('endBtn').addEventListener('click', () => {
