@@ -389,9 +389,13 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
   document.getElementById('endBtn').addEventListener('click', () => {
     if (!pageFlip) return;
     const idx = pageFlip.getCurrentPageIndex();
-    if (idx === 0) pageFlip.turnToPage(29);      // 在封面 → 去封底
-    else if (idx === 29) pageFlip.turnToPage(0); // 在封底 → 回封面
-    else pageFlip.turnToPage(0);                 // 其他 → 去封面
+    const target = idx === 0 ? 29 : 0;   // 封面↔封底切换，其他→封面
+    pageFlip.turnToPage(target);
+    // turnToPage 到末尾可能不触发 changeState read，手动复位并应用位置
+    setTimeout(() => {
+      isFlipping = false;
+      updateStatus();
+    }, 700);
   });
 
   /* ═══════ 自适应：库 autoSize 已处理，resize 时刷新 ═══════ */
@@ -428,6 +432,12 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       // 翻页动画中：不应用封面 transform（避免跳动），更新页码等
       isFlipping = true;
       updateStatus();
+      // 超时兜底：翻页结束强制复位（某些跳转不触发 changeState read）
+      clearTimeout(window.__flipTimeout);
+      window.__flipTimeout = setTimeout(() => {
+        isFlipping = false;
+        updateStatus();
+      }, 900);
     });
     pageFlip.on('changeState', (ev) => {
       // 翻页完成：恢复封面 transform
