@@ -448,7 +448,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       if (!pageFlip) return;
       const idx = pageFlip.getCurrentPageIndex();
       if (idx === 0) {
-        pageFlip.flipNext();
+        goNext();
         return;
       }
       if (idx > 0 && idx < 25 && e.target.closest('.stf__item')) {
@@ -457,9 +457,21 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       }
     });
 
+    // 翻页：单页模式（移动端）用 turnToPage（flipPrev/flipNext 在 portrait 失灵），对开模式用 flip
+    const goNext = () => {
+      if (!pageFlip) return;
+      if (isDouble()) pageFlip.flipNext();
+      else pageFlip.turnToPage(pageFlip.getCurrentPageIndex() + 1);
+    };
+    const goPrev = () => {
+      if (!pageFlip) return;
+      if (isDouble()) pageFlip.flipPrev();
+      else pageFlip.turnToPage(pageFlip.getCurrentPageIndex() - 1);
+    };
+
     // 按钮
-    document.getElementById('btnNext').addEventListener('click', () => pageFlip && pageFlip.flipNext());
-    document.getElementById('btnPrev').addEventListener('click', () => pageFlip && pageFlip.flipPrev());
+    document.getElementById('btnNext').addEventListener('click', goNext);
+    document.getElementById('btnPrev').addEventListener('click', goPrev);
     document.getElementById('tocToggle').addEventListener('click', () => toc.classList.add('open'));
     document.getElementById('tocClose').addEventListener('click', closeToc);
     document.addEventListener('click', (e) => {
@@ -472,12 +484,12 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       if (lightbox.classList.contains('open')) {
         if (e.key === 'Escape') closeLightbox();
         // Lightbox 打开时方向键仍可翻页：先关闭放大层再翻
-        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); closeLightbox(); pageFlip && pageFlip.flipNext(); }
-        if (e.key === 'ArrowLeft') { e.preventDefault(); closeLightbox(); pageFlip && pageFlip.flipPrev(); }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); closeLightbox(); goNext(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); closeLightbox(); goPrev(); }
         return;
       }
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); pageFlip && pageFlip.flipNext(); }
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); pageFlip && pageFlip.flipPrev(); }
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goNext(); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goPrev(); }
       if (e.key === 'Escape') closeToc();
     });
 
