@@ -16,7 +16,7 @@ const CONFIG = {
     { name: '宋 · 吉州窑剪纸贴花双凤纹黑釉盏', start: 7,  pages: 2, desc: '展览修复 · 口径12cm　高4cm' },
     { name: '宋 · 白覆轮黑釉盏',              start: 9,  pages: 2, desc: '展览修复 · 口径12cm　高4.5cm' },
     { name: '唐 · 巩县窑白釉盏',              start: 11, pages: 2, desc: '展览修复 · 石膏修复 · 口径10cm　高4cm' },
-    { name: '宋 · 当阳峪窑三彩鹦鹉枕',        start: 13, pages: 2, desc: '展览修复 · 修复全流程 · 长35cm　宽13cm　高9cm' },
+    { name: '宋 · 当阳峪窑三彩鹦鹉纹枕',        start: 13, pages: 2, desc: '展览修复 · 修复全流程 · 长35cm　宽13cm　高9cm' },
     { name: '汉 · 铅釉陶连枝树形灯',          start: 15, pages: 4, desc: '展览修复 · 高65cm' },
     { name: '汉 · 铅釉陶庖厨俑',              start: 19, pages: 2, desc: '展览修复 · 高31.5cm' },
     { name: '汉 · 铅釉陶楼一组',              start: 21, pages: 4, desc: '高37cm、40cm、30cm（从左到右）' },
@@ -31,7 +31,7 @@ const WORK_THEME = [
   'rgb(247,240,218)',   // 3 宋 吉州窑双凤纹黑釉盏
   'rgb(79,72,69)',      // 4 宋 白覆轮黑釉盏
   'rgb(200,200,200)',   // 5 唐 巩县窑白釉盏（修复栏中灰）
-  'rgb(96,137,109)',    // 6 宋 当阳峪窑三彩鹦鹉枕
+  'rgb(96,137,109)',    // 6 宋 当阳峪窑三彩鹦鹉纹枕
   'rgb(168,168,144)',   // 7 汉 铅釉陶连枝树形灯（暖米灰）
   'rgb(229,218,206)',   // 8 汉 铅釉陶庖厨俑
   'rgb(144,144,144)',   // 9 汉 铅釉陶楼一组
@@ -192,8 +192,9 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
   // 作品起始页 N → 内页对开索引（内页 idx: 3,5,7…25 → [pN,pN+1]）
   const toIndex = (n) => {
     if (n <= 0) return 0;          // 封面
-    if (n >= 24) return 25;        // 收尾 → 最后一对开 [p23,p24]
-    return 3 + Math.floor((n - 1) / 2) * 2;  // 1→3, 2→3, 3→5, 5→7…
+    if (n >= 24) return 26;        // 收尾 → 内页末尾（单页 p24）
+    // 单页模式：idx = 3 + (n-1)；对开模式：idx = 3 + floor((n-1)/2)*2
+    return isDouble() ? 3 + Math.floor((n - 1) / 2) * 2 : 3 + (n - 1);
   };
 
   const startOf = (w) => w.start;
@@ -231,10 +232,14 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     });
 
     // 封底条目
-    mkBtn('封底 · 復', 25, 'Back');
+    mkBtn('封底 · 復', 29, 'Back');
   }
 
   /* ═══════ 页码 / 信息显示 ═══════ */
+  // 双页（对开）模式：桌面宽屏；单页模式：移动端窄屏
+  const isDouble = () => window.matchMedia('(min-width: 641px)').matches;
+
+  // 内页映射：单页模式 idx 3..26 → p1..p24；对开模式 idx 3,5..25 → [pN,pN+1]
   function spreadOf(idx) {
     if (idx === 0) return { kind: 'cover' };
     if (idx === 29) return { kind: 'back' };
@@ -242,10 +247,16 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     if (idx === 2) return { kind: 'tocpage' };    // 目录页
     if (idx === 27) return { kind: 'intro1' };    // 个人介绍1
     if (idx === 28) return { kind: 'intro2' };    // 个人介绍2
-    // 内页 3-26：idx 3,5,7…25 → [pN, pN+1]
-    if (idx >= 3 && idx <= 25 && idx % 2 === 1) {
-      const p1 = idx - 2;                          // idx3→p1, idx5→p3…
-      return { kind: 'pages', pages: [p1, p1 + 1] };
+    if (idx >= 3 && idx <= 26) {
+      if (isDouble()) {
+        if (idx % 2 === 1) {
+          const p1 = idx - 2;                      // 对开 idx3→p1, idx5→p3…
+          return { kind: 'pages', pages: [p1, p1 + 1] };
+        }
+        return { kind: 'mid' };
+      }
+      // 单页模式：idx3→p1, idx4→p2…
+      return { kind: 'pages', pages: [idx - 2, idx - 2] };
     }
     return { kind: 'mid' };
   }
@@ -258,7 +269,6 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
 
     // 闭合（封面/封底）时平移书容器，使封面或封底单一页居中
     // 双页模式（桌面）下封面/封底各占半页，需平移居中；单页模式（移动端）占满整本自然居中
-    const isDouble = window.matchMedia('(min-width: 641px)').matches;
     const w = bookEl.offsetWidth;
     if (idx === 0 && isDouble) {
       // 封面在右半 → 容器左移 1/4 宽，封面居中
@@ -275,15 +285,17 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     } else if (sp.kind === 'back') {
       pageNumEl.textContent = 'Back · 封底';
     } else if (sp.kind === 'title') {
-      pageNumEl.textContent = '扉页 · 目录';
+      pageNumEl.textContent = isDouble() ? '扉页 · 目录' : '扉页 · Title';
     } else if (sp.kind === 'tocpage') {
-      pageNumEl.textContent = '目录 · 扉页';
+      pageNumEl.textContent = isDouble() ? '目录 · 扉页' : '目录 · Contents';
     } else if (sp.kind === 'intro1') {
       pageNumEl.textContent = '个人介绍 · About';
     } else if (sp.kind === 'intro2') {
       pageNumEl.textContent = '修复经历 · Works';
     } else if (sp.kind === 'pages') {
-      pageNumEl.textContent = `${pad(sp.pages[0])}–${pad(sp.pages[1])} / ${pad(TOTAL)}`;
+      // 单页模式显示单页码，对开模式显示区间
+      const p1 = pad(sp.pages[0]);
+      pageNumEl.textContent = isDouble() ? `${p1}–${pad(sp.pages[1])} / ${pad(TOTAL)}` : `${p1} / ${pad(TOTAL)}`;
     } else {
       pageNumEl.textContent = '…';
     }
@@ -397,7 +409,8 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       size: 'stretch',            // 随容器宽度缩放
       autoSize: true,             // 容器宽度自适应
       showCover: true,            // 有封面：初始闭合，翻开平摊
-      usePortrait: false,         // 对开书
+      usePortrait: true,          // 窄屏自动单页模式（移动端），宽屏对开
+      minWidth: 340,              // 单页最小宽：容器 < 2×340 时转单页
       flippingTime: 650,
       startPage: 0,               // 初始 = 封面闭合
       disableFlipByClick: true,   // 点击由我们控制（封面翻开 / 放大）
