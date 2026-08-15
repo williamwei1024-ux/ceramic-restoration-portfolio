@@ -77,6 +77,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       </div>
       <div class="cover-main">
         <div class="giant-char">修</div>
+        <div class="giant-mask" aria-hidden="true">修</div>
       </div>
       <div class="cover-bottom">
         <p class="cover-sub">一器一物 · 匠心重光</p>
@@ -95,6 +96,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       </div>
       <div class="cover-main">
         <div class="giant-char">復</div>
+        <div class="giant-mask" aria-hidden="true">復</div>
       </div>
       <div class="cover-bottom">
         <p class="cover-sub">完器归位 · 匠心重光</p>
@@ -399,7 +401,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
 
   /* ═══════ 初始化 ═══════ */
   function init() {
-    document.title = `${CONFIG.title} · ${CONFIG.author}`;
+    document.title = 'LIYUAN WEI | Restoration';
     buildToc();
     const pages = buildPages();
     pages.forEach((el) => el.setAttribute('data-page', ''));
