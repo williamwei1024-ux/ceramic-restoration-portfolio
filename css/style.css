@@ -428,6 +428,7 @@ body.dark-bg .footer { color: #e8eef5; }
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
+  opacity: 0.45;                          /* 花纹半透明，白底透出 */
   pointer-events: none;
   z-index: 3;
 }
