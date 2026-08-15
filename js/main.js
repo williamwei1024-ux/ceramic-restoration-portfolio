@@ -266,6 +266,9 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     currentPage = idx;
     const sp = spreadOf(idx);
 
+    // 对开展开（非封面/封底闭合）时显示内部细边线
+    bookEl.classList.toggle('spread-open', isDouble() && idx > 0 && idx < 27 && !isFlipping);
+
     // 闭合（封面/封底）时平移书容器，使封面或封底单一页居中
     // 翻页动画中不修改 transform（避免跳动），静止时才应用
     if (!isFlipping) {
