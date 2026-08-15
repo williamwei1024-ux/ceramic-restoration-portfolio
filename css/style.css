@@ -401,7 +401,6 @@ body.dark-bg .footer { color: #e8eef5; }
   font-weight: 600;
   line-height: 1;
   color: #fff;                          /* 白色填充 */
-  -webkit-text-stroke: 2px var(--cyan-ink);  /* 蓝色描边线稿 */
   text-shadow: 0 0 40px rgba(160, 200, 235, 0.25);
   letter-spacing: 0.02em;
   user-select: none;
