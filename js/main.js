@@ -270,10 +270,10 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     // 闭合（封面/封底）时平移书容器，使封面或封底单一页居中
     // 双页模式（桌面）下封面/封底各占半页，需平移居中；单页模式（移动端）占满整本自然居中
     const w = bookEl.offsetWidth;
-    if (idx === 0 && isDouble) {
+    if (idx === 0 && isDouble()) {
       // 封面在右半 → 容器左移 1/4 宽，封面居中
       bookEl.style.transform = `translateX(-${w / 4}px)`;
-    } else if (idx === 29 && isDouble) {
+    } else if (idx === 29 && isDouble()) {
       // 封底在左半 → 容器右移 1/4 宽，封底居中
       bookEl.style.transform = `translateX(${w / 4}px)`;
     } else {
