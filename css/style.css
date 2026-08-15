@@ -294,23 +294,9 @@ body.dark-bg .footer { color: #e8eef5; }
 .intro-title { margin-bottom: 0.4rem; }
 /* 中间跨页交界处不显示边框（左页去右边框、右页去左边框） */
 @media (min-width: 641px) {
-  /* 跨页中间不设边框，保证左右页图片边缘对齐（内部线用 ::after 画） */
+  /* 跨页中间不设边框，保证左右页图片边缘对齐 */
   .book-skin .stf__item.--left  { border-right: 0; }
   .book-skin .stf__item.--right { border-left: 0; }
-}
-
-/* 跨页内部细边线（绝对定位，不占布局，避免图片错位） */
-.book-skin.spread-open::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  transform: translateX(-50%);
-  background: rgba(180, 200, 220, 0.35);
-  z-index: 20;
-  pointer-events: none;
 }
 /* 封面/封底单独一页闭合时，保留完整白色边框 */
 .book-skin .stf__item.page-cover-front,
