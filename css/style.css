@@ -3,13 +3,13 @@
    极简杂志风（与摄影作品集一致）+ 真实翻书效果
    ═══════════════════════════════════════════ */
 
-/* 隶书 web 字体（封面/封底「修/復」字） */
+/* 隶书 web 字体（封面/封底「修/復」字，站酷快乐体含完整字形） */
 @font-face {
-  font-family: 'MaShanZheng';
+  font-family: 'ZCOOLQingKe';
   font-style: normal;
   font-weight: 400;
   font-display: block;   /* 等字体加载完成再显示，避免回退宋体再跳变 */
-  src: url('../fonts/ma_shan_zheng.woff2') format('woff2');
+  src: url('../fonts/zcool_qingke.woff2') format('woff2');
 }
 
 :root {
@@ -405,7 +405,7 @@ body.dark-bg .footer { color: #e8eef5; }
   min-height: 0;
 }
 .giant-char {
-  font-family: 'MaShanZheng', 'STLiti', '华文隶书', 'LiSu', '隶书', 'Kaiti SC', serif;
+  font-family: 'ZCOOLQingKe', 'STLiti', '华文隶书', 'LiSu', '隶书', 'Kaiti SC', serif;
   font-size: clamp(9rem, 46vh, 18rem);
   font-weight: 400;
   line-height: 1;
@@ -422,7 +422,7 @@ body.dark-bg .footer { color: #e8eef5; }
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'MaShanZheng', 'STLiti', '华文隶书', 'LiSu', '隶书', 'Kaiti SC', serif;
+  font-family: 'ZCOOLQingKe', 'STLiti', '华文隶书', 'LiSu', '隶书', 'Kaiti SC', serif;
   font-size: clamp(9rem, 46vh, 18rem);
   font-weight: 400;
   line-height: 1;
