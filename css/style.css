@@ -8,7 +8,7 @@
   font-family: 'MaShanZheng';
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;   /* 等字体加载完成再显示，避免回退宋体再跳变 */
   src: url('../fonts/ma_shan_zheng.woff2') format('woff2');
 }
 

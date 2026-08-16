@@ -180,7 +180,9 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     pages.push(buildTitlePage());       // 1 扉页
     pages.push(buildTocPage());         // 2 目录页
     for (let i = 0; i < TOTAL; i++) pages.push(buildInnerPage(i));  // 3-26 内页
-    pages.push(buildBackPage());        // 27 封底
+    pages.push(buildIntroPage(false));  // 27 个人介绍1
+    pages.push(buildIntroPage(true));   // 28 个人介绍2
+    pages.push(buildBackPage());        // 29 封底
     return pages;
   }
 
@@ -233,7 +235,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
     });
 
     // 封底条目
-    mkBtn('封底 · 復', 27, 'Back');
+    mkBtn('封底 · 復', 29, 'Back');
   }
 
   /* ═══════ 页码 / 信息显示 ═══════ */
@@ -243,9 +245,11 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
   // 内页映射：单页模式 idx 3..26 → p1..p24；对开模式 idx 3,5..25 → [pN,pN+1]
   function spreadOf(idx) {
     if (idx === 0) return { kind: 'cover' };
-    if (idx === 27) return { kind: 'back' };
+    if (idx === 29) return { kind: 'back' };
     if (idx === 1) return { kind: 'title' };      // 扉页
     if (idx === 2) return { kind: 'tocpage' };    // 目录页
+    if (idx === 27) return { kind: 'intro1' };    // 个人介绍1
+    if (idx === 28) return { kind: 'intro2' };    // 个人介绍2
     if (idx >= 3 && idx <= 26) {
       if (isDouble()) {
         if (idx % 2 === 1) {
@@ -273,7 +277,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       if (idx === 0 && isDouble()) {
         // 封面在右半 → 容器左移 1/4 宽，封面居中
         bookEl.style.transform = `translateX(-${w / 4}px)`;
-      } else if (idx === 27 && isDouble()) {
+      } else if (idx === 29 && isDouble()) {
         // 封底在左半 → 容器右移 1/4 宽，封底居中
         bookEl.style.transform = `translateX(${w / 4}px)`;
       } else {
@@ -289,6 +293,10 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       pageNumEl.textContent = isDouble() ? '扉页 · 目录' : '扉页 · Title';
     } else if (sp.kind === 'tocpage') {
       pageNumEl.textContent = isDouble() ? '目录 · 扉页' : '目录 · Contents';
+    } else if (sp.kind === 'intro1') {
+      pageNumEl.textContent = '个人介绍 · About';
+    } else if (sp.kind === 'intro2') {
+      pageNumEl.textContent = '修复经历 · Works';
     } else if (sp.kind === 'pages') {
       // 单页模式显示单页码，对开模式显示区间
       const p1 = pad(sp.pages[0]);
@@ -306,7 +314,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
       bg = 'rgb(35,50,74)';    // 深冷蓝（呼应封面）
     } else if (sp.kind === 'back') {
       bg = 'rgb(42,61,82)';
-    } else if (sp.kind === 'title' || sp.kind === 'tocpage') {
+    } else if (sp.kind === 'title' || sp.kind === 'tocpage' || sp.kind === 'intro1' || sp.kind === 'intro2') {
       bg = 'rgb(234,242,249)';  // 附加页用浅蓝底
     }
 
@@ -351,7 +359,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
 
     // 按钮状态
     document.getElementById('btnPrev').disabled = idx <= 0;
-    document.getElementById('btnNext').disabled = idx >= 27;
+    document.getElementById('btnNext').disabled = idx >= 29;
   }
 
   /* ═══════ Lightbox ═══════ */
@@ -381,7 +389,7 @@ const PAGE_WORK = [0,0,0,0, 1,1, 2,2, 3,3, 4,4, 5,5, 6,6,6,6, 7,7, 8,8,8, 8];
   document.getElementById('endBtn').addEventListener('click', () => {
     if (!pageFlip) return;
     const idx = pageFlip.getCurrentPageIndex();
-    const target = idx === 0 ? 27 : 0;   // 封面↔封底切换，其他→封面
+    const target = idx === 0 ? 29 : 0;   // 封面↔封底切换，其他→封面
     pageFlip.turnToPage(target);
     // turnToPage 到末尾可能不触发 changeState read，手动复位并应用位置
     setTimeout(() => {
